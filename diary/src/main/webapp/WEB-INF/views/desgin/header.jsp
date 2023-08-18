@@ -79,8 +79,7 @@ margin-right: 30px;
 }
 
 /* 화면 너비가 625px 이상일 때 미디어 쿼리 내용 */
-/* @media screen and (min-width: 800px) { */
-@media screen and (min-width: 971px) and (min-height: 673px) {
+ @media screen and (min-width: 950px) {
   /* 기존 메뉴 스타일 보이기 */
   #menu {
     display: flex;
@@ -119,8 +118,7 @@ margin-right: 30px;
 }/* end 화면 너비가 625px 이상일 때 */
 
 /* 화면 너비가 625px 이하일 때 미디어 쿼리 내용 */
-/* @media screen and (max-width: 625px) { */
-@media screen and (max-width: 971px) {
+@media screen and (max-width: 950px) { 
 
   /* 햄버거 아이콘 스타일 */
   .fas.fa-bars {
