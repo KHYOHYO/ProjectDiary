@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lgy.diary.dao.IMemDao">
+    <insert id="write" parameterType="hashmap">
+    	insert into MEMBER values(
+							    	#{id, jdbcType=VARCHAR},
+							        #{pwd, jdbcType=VARCHAR},
+							        #{email, jdbcType=VARCHAR},
+							        #{hp, jdbcType=VARCHAR},
+							        #{name, jdbcType=VARCHAR},
+							        #{sms, jdbcType=VARCHAR},
+							        #{emails, jdbcType=VARCHAR}
+    							 )
+    </insert>
+    
+	<select id="loginYn" resultType="com.lgy.diary.dto.MemDto">	
+		select * from MEMBER where id = #{id, jdbcType=VARCHAR} and pwd = #{pwd, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="find_id" resultType="String">
+		select id from MEMBER where name=#{name, jdbcType=VARCHAR} and hp=#{hp, jdbcType=VARCHAR}	 
+	</select>
+	
+	<select id="find_pwd" resultType="String">
+		select pwd from MEMBER where id=#{id, jdbcType=VARCHAR} and name=#{name, jdbcType=VARCHAR} and hp=#{hp, jdbcType=VARCHAR} and email=#{email, jdbcType=VARCHAR}
+	</select>
+   <select id="idCheck" resultType="int">
+	      select count(*) from MEMBER where id=#{id, jdbcType=VARCHAR}          
+   </select>
+	
+	<select id="emailCheck" resultType="int">
+		select count(*) from MEMBER where email=#{email, jdbcType=VARCHAR}			 
+	</select>
+	
+	<select id="hpCheck" resultType="int">
+		select count(*) from MEMBER where hp=#{hp, jdbcType=VARCHAR}			 
+	</select>
+	
+	<insert id="saveUser" parameterType="hashmap">
+   		 insert into MEMBER values(
+							        #{id, jdbcType=VARCHAR},
+							        #{pwd, jdbcType=VARCHAR},
+							        #{email, jdbcType=VARCHAR},
+							        #{hp, jdbcType=VARCHAR},
+							        #{name, jdbcType=VARCHAR},
+							        #{sms, jdbcType=VARCHAR},
+							        #{emails, jdbcType=VARCHAR}
+							     )
+	</insert>
+	
+	<select id="sameId" resultType="String">
+		select id from MEMBER where id=#{id, jdbcType=VARCHAR}	 
+	</select>
+	
+	<select id="memInfo" resultType="com.lgy.diary.dto.MemDto">
+		select * from MEMBER where id=#{id, jdbcType=VARCHAR}
+	</select>
+
+</mapper>
