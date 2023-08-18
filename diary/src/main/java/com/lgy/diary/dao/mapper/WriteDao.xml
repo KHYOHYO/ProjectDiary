@@ -1,0 +1,210 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lgy.diary.dao.WriteDao">
+    
+    <insert id="diaryWrite" parameterType="hashmap">
+    	insert into diarywrite
+    (bid, id, topic, name, title, content , wdate ,hits)  
+    			values
+			     (diarywrite_seq.nextval,
+    			 #{id, jdbcType=VARCHAR},
+    			 1,
+			     #{name, jdbcType=VARCHAR},
+			     #{title, jdbcType=VARCHAR},
+			     #{content, jdbcType=VARCHAR},
+			     to_char(sysdate,'YYYY.MM.DD'),
+			     0
+			    )
+    </insert>
+    <select id="maxBid" resultType="int">
+			SELECT MAX(bid) FROM diarywrite
+	</select>
+	
+    <select id="writeView" parameterType="hashmap" resultType="com.lgy.diary.dto.WriteDto">
+<!-- select * from DIARYWRITE where bid = (select max(bid) from DIARYWRITE) -->
+		select bid, id, topic, name, title, content, to_char(wdate,'YYYY.MM.DD')as WDATE, hits 
+		from DIARYWRITE where bid = (select max(bid) from DIARYWRITE)
+    </select>
+    
+    <select id="contentView" parameterType="hashmap" resultType="com.lgy.diary.dto.WriteDto">
+		select *
+		from DIARYWRITE where bid = #{bid}
+	</select>
+
+	<update id="diaryModify" parameterType="hashmap">
+	    UPDATE DIARYWRITE
+	    SET title = #{title, jdbcType=VARCHAR},
+	        content = #{content, jdbcType=VARCHAR}
+	    WHERE bid = #{bid, jdbcType=INTEGER}
+	</update>
+	
+    <update id="diaryDelete" parameterType="hashmap">
+    	delete from DIARYWRITE where bid=#{bid, jdbcType=INTEGER}
+    </update>
+    
+	<select id="writeView2" parameterType="hashmap" resultType="com.lgy.diary.dto.WriteDto">
+		select bid, id, topic, name, title, content, to_char(wdate,'YYYY.MM.DD')as WDATE, hits 
+		from DIARYWRITE where bid = #{bid, jdbcType=INTEGER}
+    </select>
+    
+    <select id="diaryList" resultType="com.lgy.diary.dto.WriteDto">
+   		select bid, id, topic, to_char(wdate,'YYYY.MM.DD')as wdate, hits, title, content  
+		from DIARYWRITE
+		order by bid desc
+    </select>
+    
+    <select id="listWithPaging" resultType="com.lgy.diary.dto.WriteDto">
+    	<![CDATA[
+SELECT  bid, id, topic, to_char(wdate,'YYYY.MM.DD') wdate, hits, title, content  
+FROM (
+    SELECT rownum rn, bid, id, topic, wdate, hits, title, content  
+    FROM (
+        SELECT bid, id, topic, wdate, hits, title, content  
+        FROM DIARYWRITE
+        WHERE id = #{id, jdbcType=VARCHAR}  
+        ORDER BY bid DESC
+    ) 
+    WHERE rownum <= (#{pageNum} * #{amount})
+)
+WHERE rn > (#{pageNum}-1) * #{amount}
+
+    	]]>
+    </select>
+    
+    <select id="everyDiaryListWithPaging" resultType="com.lgy.diary.dto.WriteDto">
+    	<![CDATA[
+   		SELECT  bid, id, topic, name, to_char(wdate,'YYYY.MM.DD')as wdate, hits, title, content  
+		from (select rownum rn, bid, id, topic, name, wdate, hits, title, content  
+					from DIARYWRITE
+					WHERE 
+		]]>
+    	<include refid="criteria"></include>
+		<![CDATA[			
+						  ROWNUM <= (#{pageNum} * #{amount})
+					order by bid desc
+		)
+		WHERE rn > (#{pageNum}-1) * #{amount}
+    	]]>
+    </select>
+	
+    <select id="topicDiaryListWithPaging" resultType="com.lgy.diary.dto.WriteDto">
+    	<![CDATA[
+	    SELECT bid, id, topic, to_char(wdate, 'YYYY.MM.DD') wdate, hits, title, content
+	    FROM (
+	      SELECT rownum rn, bid, id, topic, wdate, hits, title, content
+	      FROM (
+	        SELECT bid, id, topic, wdate, hits, title, content
+	        FROM DIARYWRITE
+	        WHERE topic = #{topic, jdbcType=VARCHAR}
+	        ORDER BY bid DESC
+	      )
+	      WHERE rownum <= (#{pageNum} * #{amount})
+	    )
+	    WHERE rn > (#{pageNum} - 1) * #{amount}
+  		]]>
+<!--    		SELECT  bid, id, topic, name, to_char(wdate,'YYYY.MM.DD') wdate, hits, title, content   -->
+<!-- 		from (select rownum rn, bid, id, topic, name, wdate, hits, title, content   -->
+<!-- 					from DIARYWRITE -->
+<!-- 					WHERE ROWNUM <= (#{pageNum} * #{amount}) -->
+<!-- 					AND topic = #{topic, jdbcType=VARCHAR}   -->
+<!-- 					order by bid desc -->
+<!-- 		) -->
+<!-- 		WHERE rn > (#{pageNum}-1) * #{amount} -->
+    </select>
+	<!-- 내 일기장 -->   
+	<select id="getTotalCount1" resultType="int">
+			select count(*) from diaryWrite where id = #{id, jdbcType=VARCHAR}  
+	</select>
+	<!-- 모두의 일기장 -->
+    <select id="getTotalCount2" resultType="int">
+			select count(*) from diaryWrite
+			WHERE
+		<include refid="criteria"></include>
+			1=1
+	</select>
+	<!-- 재미있는 일기장 -->
+	<select id="getTotalCount3" resultType="int">
+			select count(*) from diaryWrite where topic= #{topic, jdbcType=INTEGER}
+	</select>  
+	
+	<select id="topicContent" resultType="String">
+			select topiccontent from DIARYTOPIC where topic = #{topic, jdbcType=INTEGER}  
+	</select>
+	
+	<insert id="topicWrite" parameterType="hashmap">
+    	insert into diarywrite 
+    			values
+			     (diarywrite_seq.nextval,
+    			 #{id, jdbcType=VARCHAR},
+    			 #{topic, jdbcType=INTEGER},
+			     #{name, jdbcType=VARCHAR},
+			     #{title, jdbcType=VARCHAR},
+			     #{content, jdbcType=VARCHAR},
+			     to_char(sysdate,'YYYY.MM.DD'),
+			     0
+			    )
+    </insert>
+    
+    <select id="topicList" resultType="com.lgy.diary.dto.WriteDto">
+   		select bid, id, topic, to_char(wdate,'YYYY.MM.DD D')as wdate, hits, title, content  
+		from DIARYWRITE
+		where topic= #{topic, jdbcType=INTEGER}  
+		order by bid desc
+    </select>
+    
+    <insert id="commentWrite" parameterType="hashmap">
+    	insert into COMMENTS
+    			values
+			     (comment_seq.nextval,
+			     #{comments, jdbcType=VARCHAR},
+			     #{id, jdbcType=VARCHAR},
+			     #{bid, jdbcType=INTEGER},
+    			 #{name, jdbcType=VARCHAR},
+			     to_char(sysdate,'YYYY.MM.DD HH24:MI')
+			    )
+    </insert>
+    
+    <select id="commentList" resultType="com.lgy.diary.dto.CommentDto">
+   		select ccode, comments, id , bid, name, to_char(wdate,'YYYY.MM.DD HH24:MI')as wdate
+		from COMMENTS
+		where bid = #{bid, jdbcType=INTEGER}
+		order by ccode desc
+    </select>
+    
+	<update id="commentModify" parameterType="hashmap">
+	    UPDATE COMMENTS
+	    SET comments = #{content, jdbcType=VARCHAR}
+	    WHERE ccode = #{ccode, jdbcType=INTEGER}
+	</update>
+	
+    <update id="commentDelete" parameterType="hashmap">
+    	delete from COMMENTS where ccode = #{ccode, jdbcType=INTEGER}
+    </update>
+    
+    <select id="commentCount" resultType="int">
+			select count(*) from COMMENTS where bid = #{bid, jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="criteria">
+		<if test='type == "T"'>
+			(title like '%'|| #{keyword} ||'%')AND
+		</if>
+		<if test='type == "C"'>
+			(content like '%'|| #{keyword} ||'%')AND
+		</if>
+		<if test='type == "W"'>
+			(name like '%'|| #{keyword} ||'%')AND
+		</if>
+		<if test='type == "TC"'>
+			(title like '%'|| #{keyword} ||'%' OR content like '%'|| #{keyword} ||'%')AND
+		</if>
+		<if test='type == "TW"'>
+			(title like '%'|| #{keyword} ||'%' OR name like '%'|| #{keyword} ||'%')AND
+		</if>
+		<if test='type == "TCW"'>
+			(title like '%'|| #{keyword} ||'%' OR content like '%'|| #{keyword} ||'%' OR name like '%'|| #{keyword} ||'%')AND
+		</if>
+	</sql>
+</mapper>
