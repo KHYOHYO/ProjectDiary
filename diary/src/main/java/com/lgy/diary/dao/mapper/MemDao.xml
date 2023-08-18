@@ -3,19 +3,6 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lgy.diary.dao.IMemDao">
-	<!-- =========================================================================================
-				  로그인&간편로그인(카카오톡) 및 회원가입&간편회원가입(카카오톡) 구현
-				  작성자   |    개발 및 수정 일자    |    수정 내용
-				  김효진          23-06-16   	  	  로그인, 회원가입, 회원가입 완료페이지 구현 완료
-				  김효진          23-06-19   	  	  회원가입	아이디 중복확인 기능 구현 중
-				  김효진          23-06-22   	  	  회원가입	아이디 중복확인 기능 오류 해결
-				  김효진          23-06-26      	  로그인	아이디 찾기 기능 구현 완료
-				  김효진          23-06-27      	  로그인	비밀번호 찾기 기능 구현 완료 (하루 2회 제한)
-				  김효진                        	  회원가입 중복검사 기능 구현 완료(전화번호, 이메일)
-				  김효진          23-06-29			  카카오톡 회원가입 데이터베이스 삽입 완료
-				  김효진          23-06-30			  카카오톡 로그인 구현 & session 유지 
-				  김효진          23-07-03			  sms, emails 추가 
-	===========================================================================================-->
     <insert id="write" parameterType="hashmap">
     	insert into MEMBER values(
 							    	#{id, jdbcType=VARCHAR},
@@ -39,6 +26,9 @@
 	<select id="find_pwd" resultType="String">
 		select pwd from MEMBER where id=#{id, jdbcType=VARCHAR} and name=#{name, jdbcType=VARCHAR} and hp=#{hp, jdbcType=VARCHAR} and email=#{email, jdbcType=VARCHAR}
 	</select>
+   <select id="idCheck" resultType="int">
+	      select count(*) from MEMBER where id=#{id, jdbcType=VARCHAR}          
+   </select>
 	
 	<select id="emailCheck" resultType="int">
 		select count(*) from MEMBER where email=#{email, jdbcType=VARCHAR}			 
@@ -68,13 +58,4 @@
 		select * from MEMBER where id=#{id, jdbcType=VARCHAR}
 	</select>
 
-   <select id="idCheck" resultType="int">
-      select count(*) from MEMBER where id=#{id, jdbcType=VARCHAR}          
-   </select>
-   
-   <!--    관리자 로그인  -->
-<!--    <select id="adminloginYn" resultType="com.lgy.diary.dto.adminDto">    -->
-<!--       select * from admin where id = #{id, jdbcType=VARCHAR} and pwd = #{pwd, jdbcType=VARCHAR} -->
-<!--    </select> -->
-	
 </mapper>

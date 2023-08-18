@@ -18,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
-//@RequestMapping("/loginRegister")
 public class MyPageController {
 	
 	@Autowired
 	private MyPageService myPageService;
 	
+	/* 마이페이지 */
 	@RequestMapping("/myPage")
 	public String myPageView(@RequestParam("id") String id, Model model,@RequestParam HashMap<String, String> param) {
 		log.info("$$$$"+id);
@@ -33,6 +33,7 @@ public class MyPageController {
 		return "loginRegister/myPage";
 	}
 	
+	/* 마이페이지 수정 */
 	@RequestMapping("/myPageModify")
 	public String myPageModify(@RequestParam HashMap<String, String> param, Model model) {
 		log.info("@# myPageModify");
@@ -49,7 +50,7 @@ public class MyPageController {
 		return "loginRegister/myPage";
 	}
 	
-	// 회원 탈퇴 get
+	/* 회원 탈퇴 페이지 */
 	@RequestMapping("/memberDeleteView")
 	public String memberDeleteView(@RequestParam HashMap<String, String> param, Model model, MemDto dto){
 		log.info("@@@### memberDeleteView"+param);
@@ -58,7 +59,7 @@ public class MyPageController {
 		return "loginRegister/memberDeleteView";
 	}
 		
-	// 회원 탈퇴 post
+	/* 회원 탈퇴 */
 	@RequestMapping("/memberDelete")
 	public String memberDelete(@RequestParam HashMap<String, String> param, RedirectAttributes attr, HttpSession session){
 			

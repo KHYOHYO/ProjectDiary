@@ -9,6 +9,8 @@ public interface MemService {
 	public MemDto loginYn(HashMap<String, String> param);
 	/* 회원가입 */
 	public void write(HashMap<String, String> param);
+	/* 아이디 중복 체크 */
+	public int idCheck(MemDto dto) throws Exception;
 	/* 이메일 중복 체크 */
 	public int emailCheck(MemDto dto) throws Exception;
 	/* 전화번호 중복 체크 */
@@ -22,6 +24,4 @@ public interface MemService {
 	public String sameId(String id);
 	public MemDto memInfo(String id);
 	
-	/* 아이디 중복 체크 */
-	public int idCheck(MemDto dto) throws Exception;
 }

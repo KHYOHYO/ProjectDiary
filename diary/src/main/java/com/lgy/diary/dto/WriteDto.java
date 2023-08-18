@@ -25,8 +25,9 @@ public class WriteDto {
 	private String wdate;
 	private int hits;
 	
+	/* 토픽주제 */
 	private String topicContent;
-	
+    /* 댓글 */
 	private ArrayList<CommentDto> commentList;
 
 }

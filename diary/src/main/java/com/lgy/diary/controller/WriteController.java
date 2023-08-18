@@ -133,7 +133,7 @@ public class WriteController {
 	public String writeView2(@RequestParam HashMap<String, String> param, Model model, Criteria cri) {
 		log.info("@# writeView2");
 		log.info("@# writeView2 param1" + param);
-		//일기를 가져오는 로직 호출 (이 부분은 실제로 구현되어야 합니다.)//1
+		//일기를 가져오는 로직 호출 (이 부분은 실제로 구현되어야 함)
 		WriteDto dto = service.writeView2(param);
 		int bid = Integer.parseInt(param.get("bid"));
 		
@@ -278,7 +278,7 @@ public class WriteController {
 		
 		// 로그인하지 않은 경우
 		MemDto memDto = (MemDto) session.getAttribute("dto");
-		// 로그인하지 않은 경우 로그인 페이지로 리다이렉트합니다.
+		// 로그인하지 않은 경우 로그인 페이지로 리다이렉트
 		if (memDto == null) {
 		   return "redirect:/login";
 		}		
@@ -302,7 +302,7 @@ public class WriteController {
 	public ResponseEntity<Integer> addComment(@RequestParam HashMap<String, String> param) throws Exception{
 		log.info("@# addComment===> "+param);
 		
-		service.commentWrite(param);// 글을 데이터베이스에 추가하는 메서드를 호출합니다.
+		service.commentWrite(param);// 글을 데이터베이스에 추가하는 메서드를 호출
 	    return ResponseEntity.status(HttpStatus.OK).body(200);
 	}
 	
